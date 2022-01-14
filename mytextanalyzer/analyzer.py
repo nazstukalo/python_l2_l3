@@ -48,9 +48,9 @@ class Analyzer:
                     self.text = r.read()
                     self.type_of_resource = 'file'
             nltk.download('punkt')
-            self.sentences = nltk.tokenize.sent_tokenize(self.text)
-            self.words = [re.sub(r'\W+', '', word) for sentence in [words.split() for words in self.sentences] for word in sentence]
-            self.number_of_characters = len([char for char in self.text if not char.isspace()])
+            self.sentences = self.count_sentences(self.text)
+            self.words = self.count_words(self.sentences)
+            self.number_of_characters = self.count_number_of_characters(self.text)
             self.number_of_words = len(self.words)
             self.number_of_sentences = len(self.sentences)
             self.frequency_of_chars = Counter(self.text)
@@ -73,6 +73,20 @@ class Analyzer:
         else:
             self.result = f"{self.time_of_report}|{self.type_of_resource}|{self.file}|INFO"
             print(f"Report for file {self.file}:date and time: {self.time_of_report}")
+
+    @staticmethod
+    def count_sentences(text):
+        return nltk.tokenize.sent_tokenize(text)
+
+    @staticmethod
+    def count_words(sentences):
+        return [re.sub(r'\W+', '', word) for sentence in [words.split() for words in sentences] for word in
+                  sentence]
+
+    @staticmethod
+    def count_number_of_characters(text):
+        return len([char for char in text if not char.isspace()])
+
 
 
 def analyze_file(file):
